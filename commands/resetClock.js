@@ -30,11 +30,10 @@ module.exports = {
 	],
 	async execute(interaction) {
 		const conf = interaction.options.getString('conf');
-		const member = interaction.member.displayName();
+		const member = interaction.member.username;
 		if (conf == 'confirm') {
-			await dutyClockDB.drop();
-			await interaction.reply('The Duty Clock has been successfully reset!');
-			await client.channels.cache.get('923065033053855744').send(`:bangbang: The duty clock database has been reset by ${member}.`);
+			await dutyClockDB.resetClock();
+			await interaction.reply(`The Duty Clock database has been successfully reset by \`${member}\`.`);
 		}
 		else {
 			await interaction.reply({ content: 'This request has been cancelled. Are you sure you meant to do this? Please type "Confirm" into the box next time if so.', ephemeral: true });

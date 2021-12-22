@@ -66,3 +66,14 @@ module.exports.listDuty = async () => {
 		}
 	});
 };
+
+module.exports.resetClock = async () => {
+	return await mongo().then(async (mongoose) => {
+		try {
+			await dutyClock.deleteMany({});
+		}
+		finally {
+			mongoose.connection.close();
+		}
+	});
+};
