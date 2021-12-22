@@ -2,7 +2,7 @@ const dutyClockDB = require('../dutyClockDB');
 
 module.exports = {
 	name: 'resetclock',
-	description: 'Resets the Duty Clock database in case of catastrophic failure. Please type the word "confirm" to make sure you know what you\'re doing.',
+	description: 'Resets the Duty Clock database in case of catastrophic failure.',
 	permission: [
 		{
 			id: '749280137173925911', // Server Staff
