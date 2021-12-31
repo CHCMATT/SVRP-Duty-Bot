@@ -48,14 +48,21 @@ client.once('ready', async () => {
 				.catch(console.error);
 		}
 	}
+
 	interact(client); // Fire whenever an interaction is created
 	messageLog(client);
 	await client.channels.cache.get('923065033053855744').send(':bangbang: The bot has started up.');
 	await client.channels.cache.get('791852229983600671').bulkDelete(5);
-	await client.channels.cache.get('923065033053855744').send(':bangbang: Clearing the <#791852229983600671> channel of old messages.');
+	await client.channels.cache.get('923065033053855744').send(':bangbang: Cleared <#791852229983600671> channel of old messages.');
 	const charArray = await dutyClockDB.listDuty();
 	await messageHandle.clockMessage(client, charArray);
-	console.log('[app-duty.js] The client is ready!');
+	await client.channels.cache.get('923065033053855744').send(':bangbang: Sent new Duty Clock message in <#791852229983600671>.');
+	console.log(`[app-duty.js] Connected to ${client.guilds.cache.size} guild(s).`); // Lists the number of guilds that the client is connected to
+	const keys = client.guilds.cache.keys(); // Gets the keys for the map object from the guilds object
+	for (const entry of keys) { // For each guild
+		console.log(`[app-duty.js] Connected to guild ID ${entry}.`); // Log the guild Key (guild.id)
+	}
+	console.log('[app-duty.js] Client is ready.');
 });
 
 client.login(config.token);

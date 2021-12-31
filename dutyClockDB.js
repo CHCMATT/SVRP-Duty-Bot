@@ -1,5 +1,7 @@
 const mongo = require('./mongo');
 const dutyClock = require('./schemas/clockedIn');
+const latestClockIn = require('./schemas/latestClockIn');
+
 
 module.exports.checkDuty = async (hexID) => {
 	return await mongo().then(async (mongoose) => {
@@ -22,12 +24,12 @@ module.exports.checkDuty = async (hexID) => {
 	});
 };
 
-module.exports.clockOn = async (hexID, charName, jobRole) => {
+module.exports.clockOn = async (hexID, charName, jobRole, clockOn) => {
 	return await mongo().then(async (mongoose) => {
 		try {
 			await dutyClock.findOneAndUpdate(
 				{ hexID },
-				{ hexID, charName, jobRole },
+				{ hexID, charName, jobRole, clockOn },
 				{ upsert: true,
 					new: true },
 			);
@@ -71,6 +73,35 @@ module.exports.resetClock = async () => {
 	return await mongo().then(async (mongoose) => {
 		try {
 			await dutyClock.deleteMany({});
+			await latestClockIn.deleteMany({});
+		}
+		finally {
+			mongoose.connection.close();
+		}
+	});
+};
+
+module.exports.setLatestClockIn = async (hexID, lastClockInTime) => {
+	await mongo().then(async (mongoose) => {
+		try {
+			await latestClockIn.findOneAndUpdate(
+				{ hexID },
+				{ hexID, lastClockInTime },
+				{ upsert: true,
+					new: true },
+			);
+		}
+		finally {
+			mongoose.connection.close();
+		}
+	});
+};
+
+module.exports.getLatestClockIn = async (hexID) => {
+	return await mongo().then(async (mongoose) => {
+		try {
+			const LCI = await latestClockIn.findOne({ hexID }, { lastClockInTime: 1, _id: 0 });
+			return LCI;
 		}
 		finally {
 			mongoose.connection.close();
