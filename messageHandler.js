@@ -5,13 +5,13 @@ module.exports.clockMessage = async (client, charArray) => {
 	const docDutyList = [];
 	const emsDutyList = [];
 	charArray.forEach(element => {
-		if (element.jobRole == 'police') {
+		if (element.jobRole == 'POLICE') {
 			pdDutyList.push(element.charName);
 		}
-		else if (element.jobRole == 'doc') {
+		else if (element.jobRole == 'DOC') {
 			docDutyList.push(element.charName);
 		}
-		else if (element.jobRole == 'ems') {
+		else if (element.jobRole == 'EMS') {
 			emsDutyList.push(element.charName);
 		}
 	});
@@ -47,7 +47,6 @@ module.exports.clockMessage = async (client, charArray) => {
 	const docEmbed = new MessageEmbed()
 		.setTitle('Clocked in for DOC:')
 		.setDescription(docDescList)
-
 		.setColor('#8466e2');
 	const emsEmbed = new MessageEmbed()
 		.setTitle('Clocked in for EMS:')
@@ -55,10 +54,17 @@ module.exports.clockMessage = async (client, charArray) => {
 		.setTimestamp()
 		.setColor('#e98fa6');
 
-	if (Object.keys(client.duty).length === 0) {
-		client.duty = await client.channels.cache.get('791852229983600671').send({ embeds: [pdEmbed, docEmbed, emsEmbed] });
+	if (Object.keys(client.dutyPd).length === 0) {
+		client.dutyPd = await client.channels.cache.get('791852229983600671').send({ embeds: [pdEmbed, docEmbed, emsEmbed] }); // pd
 	}
 	else {
-		client.duty.edit({ embeds: [pdEmbed, docEmbed, emsEmbed] });
+		client.dutyPd.edit({ embeds: [pdEmbed, docEmbed, emsEmbed] });
+	}
+
+	if (Object.keys(client.dutyEms).length === 0) {
+		client.dutyEms = await client.channels.cache.get('927830243086061628').send({ embeds: [pdEmbed, docEmbed, emsEmbed] }); // ems
+	}
+	else {
+		client.dutyEms.edit({ embeds: [pdEmbed, docEmbed, emsEmbed] });
 	}
 };

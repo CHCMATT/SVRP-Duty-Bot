@@ -24,19 +24,19 @@ module.exports = {
 	options: [
 		{
 			name: 'role',
-			description: 'Police, DOC, EMS, or All',
+			description: 'POLICE, DOC, EMS, or All',
 			type: 'STRING',
 			required: true,
 		},
 	],
 	async execute(interaction) {
-		const role = interaction.options.getString('role').toLowerCase();
+		const role = interaction.options.getString('role').toUpperCase();
 		const dutyList = [];
 		const pdDutyList = [];
 		const docDutyList = [];
 		const emsDutyList = [];
-		const charArray = await dutyClockDB.listDuty();
-		if (role == 'police' || role == 'ems' || role == 'doc') {
+		const charArray = await dutyClockDB.listDutyCharJobs();
+		if (role == 'POLICE' || role == 'EMS' || role == 'DOC') {
 			charArray.forEach(element => {
 				if (element.jobRole == role) {
 					dutyList.push(element.charName);
@@ -57,22 +57,22 @@ module.exports = {
 				.setDescription(descList)
 				.setTimestamp();
 
-			if (role == 'police') {dutyListEmbed.setColor('#2d6eb9');} // pd
-			else if (role == 'doc') {dutyListEmbed.setColor('#8466e2');} // doc
-			else if (role == 'ems') {dutyListEmbed.setColor('#e98fa6');} // ems
+			if (role == 'POLICE') {dutyListEmbed.setColor('#2d6eb9');} // pd
+			else if (role == 'DOC') {dutyListEmbed.setColor('#8466e2');} // doc
+			else if (role == 'EMS') {dutyListEmbed.setColor('#e98fa6');} // ems
 			else {dutyListEmbed.setColor('#cc0000');} // error
 
 			interaction.reply({ embeds: [dutyListEmbed] });
 		}
-		else if (role == 'all') {
+		else if (role == 'ALL') {
 			charArray.forEach(element => {
-				if (element.jobRole == 'police') {
+				if (element.jobRole == 'POLICE') {
 					pdDutyList.push(element.charName);
 				}
-				else if (element.jobRole == 'doc') {
+				else if (element.jobRole == 'DOC') {
 					docDutyList.push(element.charName);
 				}
-				else if (element.jobRole == 'ems') {
+				else if (element.jobRole == 'EMS') {
 					emsDutyList.push(element.charName);
 				}
 			});

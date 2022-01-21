@@ -9,7 +9,7 @@ const clockedInSchema = mongoose.Schema({
 	hexID: reqString,
 	charName: reqString,
 	jobRole: reqString,
-	clockOn: reqString,
+	clockInTime: reqString,
 });
 
 module.exports = mongoose.model('clockedIn', clockedInSchema);

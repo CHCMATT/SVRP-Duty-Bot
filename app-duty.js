@@ -1,10 +1,12 @@
 const { Client, Collection, Intents } = require('discord.js');
 const mongo = require('./mongo');
 const fs = require('fs');
+const cron = require('node-cron');
 const config = require('./config.json');
 const messageLog = require('./watchDog');
 const interact = require('./interactions');
 const messageHandle = require('./messageHandler');
+const COA = require('./clockOutAllUsers');
 const dutyClockDB = require('./dutyClockDB');
 
 const myIntents = new Intents();
@@ -15,15 +17,29 @@ client.buttons = new Collection();
 
 client.once('ready', async () => {
 	console.log('[app-duty.js] The client is starting up!');
-	client.duty = {};
-	await mongo().then((mongoose) => {
+	client.dutyPd = {};
+	client.dutyEms = {};
+	await mongo().then(() => {
 		try {
 			console.log('[app-duty.js] Connected to mongo!');
 		}
 		finally {
-			mongoose.connection.close();
+			// mongoose.connection.close();
 		}
 	});
+
+	async function amResetJob() {
+		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock database has been successfully reset by `Scheduled Job (5am EST)`.');
+		COA.clockOutAll(client);
+	}
+
+	async function pmResetJob() {
+		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock database has been successfully reset by `Scheduled Job (5pm EST)`.');
+		COA.clockOutAll(client);
+	}
+
+	cron.schedule('0 1 5 * * *', function() { amResetJob(); });
+	cron.schedule('0 1 17 * * *', function() { pmResetJob(); });
 
 	const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js')); // Find all the files in the command folder that end with .js
 	const cmdList = []; // Create an empty array for pushing each command file to
@@ -52,11 +68,16 @@ client.once('ready', async () => {
 	interact(client); // Fire whenever an interaction is created
 	messageLog(client);
 	await client.channels.cache.get('923065033053855744').send(':bangbang: The bot has started up.');
-	await client.channels.cache.get('791852229983600671').bulkDelete(5);
+	await client.channels.cache.get('791852229983600671').bulkDelete(5); // PD channel
 	await client.channels.cache.get('923065033053855744').send(':bangbang: Cleared <#791852229983600671> channel of old messages.');
-	const charArray = await dutyClockDB.listDuty();
+	await client.channels.cache.get('927830243086061628').bulkDelete(5); // EMS channel
+	await client.channels.cache.get('923065033053855744').send(':bangbang: Cleared <#927830243086061628> channel of old messages.');
+	// await dutyClockDB.resetClock();
+	// await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock databases have been reset.');
+	const charArray = await dutyClockDB.listDutyCharJobs();
 	await messageHandle.clockMessage(client, charArray);
 	await client.channels.cache.get('923065033053855744').send(':bangbang: Sent new Duty Clock message in <#791852229983600671>.');
+	await client.channels.cache.get('923065033053855744').send(':bangbang: Sent new Duty Clock message in <#927830243086061628>.');
 	console.log(`[app-duty.js] Connected to ${client.guilds.cache.size} guild(s).`); // Lists the number of guilds that the client is connected to
 	const keys = client.guilds.cache.keys(); // Gets the keys for the map object from the guilds object
 	for (const entry of keys) { // For each guild

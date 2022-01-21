@@ -1,8 +1,9 @@
 const dutyClockDB = require('../dutyClockDB');
+const messageHandle = require('../messageHandler');
 
 module.exports = {
 	name: 'resetclock',
-	description: 'Resets the Duty Clock database in case of catastrophic failure.',
+	description: '(deprecated) Resets the Duty Clock database in case of catastrophic failure.',
 	permission: [
 		{
 			id: '749280137173925911', // Server Staff
@@ -28,12 +29,13 @@ module.exports = {
 			required: true,
 		},
 	],
-	async execute(interaction) {
+	async execute(interaction, client) {
 		const conf = interaction.options.getString('conf');
 		const user = interaction.member.user.username;
 		if (conf == 'confirm') {
-			await dutyClockDB.resetClock();
+			const clockList = await dutyClockDB.resetClock();
 			await interaction.reply(`The Duty Clock databases have been successfully reset by \`${user}\`.`);
+			await messageHandle.clockMessage(client, clockList);
 		}
 		else {
 			await interaction.reply({ content: 'This request has been cancelled. Are you sure you meant to do this? Please type "Confirm" into the box next time if so.', ephemeral: true });
