@@ -1,5 +1,4 @@
-const dutyClockDB = require('../dutyClockDB');
-const messageHandle = require('../messageHandler');
+const Discord = require('discord.js');
 
 module.exports = {
 	name: 'clockoutall',
@@ -22,46 +21,24 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
-		const user = interaction.member.user.username;
-		await interaction.reply(`Attempting to clock all users out from the Duty Clock. Event triggered by \`${user}\`.`);
-		const now = Math.floor(new Date().getTime() / 1000.0);
-		const time = `<t:${now}:t>`;
-		const dutyArray = await dutyClockDB.listDutyAll();
-		const clockAction = 'off';
-		for (x = 0; x < dutyArray.length; x++) {
-			const hex = dutyArray[x].hexID;
-			const charName = dutyArray[x].charName;
-			const jobRole = dutyArray[x].jobRole;
-			const clockInTimeObj = await dutyClockDB.getLatestClockIn(hex);
-			if (clockInTimeObj !== null) {
-				const clockInTime = await clockInTimeObj.clockInTime;
-				const dutytime = (Math.round((now - clockInTime) / 60));
-				text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
-				text2 = `:red_circle: \`${charName}\` clocked off at ${time}. They clocked on at <t:${clockInTime}:t> and were clocked in for \`${dutytime}\` minutes.`;
-			}
-			else {
-				const clockInTime = 'unknown';
-				const dutytime = 'unknown';
-				text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
-				text2 = `:red_circle: \`${charName}\` clocked off at ${time}. They clocked on at \`${clockInTime}\` and were clocked in for \`${dutytime}\` minutes.`;
-			}
-			await dutyClockDB.clockOutUpdate(hex, charName, jobRole, now);
-			if (jobRole === 'POLICE') {
-				await interaction.client.channels.cache.get('925843917558124644').send(text2); // Sends message to PD log channel for HR
-			}
-			else if (jobRole === 'DOC') {
-				await interaction.client.channels.cache.get('925843974860722196').send(text2); // Sends message to DOC log channel for HR
-			}
-			else if (jobRole === 'EMS') {
-				await interaction.client.channels.cache.get('927830297834319942').send(text2); // Sends message to EMS log channel for HR
-			}
-			else {
-				await interaction.client.channels.cache.get('923065033053855744').send(':bangbang: Help I\'ve fallen and can\'t get up. :(');
-			}
-			await interaction.client.channels.cache.get('923065033053855744').send(text); // Sends message to all logs channel
-			const clockList = await dutyClockDB.clockOut(hex);
-			await messageHandle.clockMessage(interaction.client, clockList);
-		}
+		const btns = confirmDenyBtns();
+		await interaction.reply({
+			content: 'Are you sure you want to reset the Duty Clock database?',
+			components: [btns],
+		});
 	},
 };
 
+function confirmDenyBtns() {
+	const row = new Discord.MessageActionRow().addComponents(
+		new Discord.MessageButton()
+			.setCustomId('confirmCOA')
+			.setLabel('Confirm')
+			.setStyle('SUCCESS'),
+		new Discord.MessageButton()
+			.setCustomId('cancelCOA')
+			.setLabel('Cancel')
+			.setStyle('DANGER'),
+	);
+	return row;
+}
