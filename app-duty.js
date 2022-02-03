@@ -72,8 +72,6 @@ client.once('ready', async () => {
 	await client.channels.cache.get('923065033053855744').send(':bangbang: Cleared <#791852229983600671> channel of old messages.');
 	await client.channels.cache.get('927830243086061628').bulkDelete(5); // EMS channel
 	await client.channels.cache.get('923065033053855744').send(':bangbang: Cleared <#927830243086061628> channel of old messages.');
-	// await dutyClockDB.resetClock();
-	// await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock databases have been reset.');
 	const charArray = await dutyClockDB.listDutyCharJobs();
 	await messageHandle.clockMessage(client, charArray);
 	await client.channels.cache.get('923065033053855744').send(':bangbang: Sent new Duty Clock message in <#791852229983600671>.');
