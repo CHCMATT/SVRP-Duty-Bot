@@ -7,7 +7,7 @@ module.exports = (client) => {
 				await client.commands[interaction.commandName].execute(interaction);
 			}
 			else if (interaction.isButton()) {
-				dsBtn.pressed(interaction);
+				dsBtn.pressed(interaction, client);
 			}
 			else {
 				return;
