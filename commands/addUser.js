@@ -25,17 +25,12 @@ module.exports = {
 			permission: true,
 		},
 		{
-			id: '913084847872954428', // SASP HR
-			type: 'ROLE',
-			permission: true,
-		},
-		{
 			id: '785546331497824307', // SADOC HR
 			type: 'ROLE',
 			permission: true,
 		},
 		{
-			id: '749280136590786561', // @everyone in Law Discord
+			id: '888571619734339594', // @everyone in Law Discord
 			type: 'ROLE',
 			permission: false,
 		},

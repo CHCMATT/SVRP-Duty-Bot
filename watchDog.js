@@ -1,5 +1,6 @@
 const dutyClockDB = require('./dutyClockDB');
 const messageHandle = require('./messageHandler');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (client) => {
 	client.on('messageCreate', async (message) => {
@@ -47,12 +48,16 @@ async function dutyClock(discordmessage, client) {
 			const dutytime = (Math.round((now - clockInTime) / 60));
 			text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
 			text2 = `:red_circle: \`${charName}\` clocked off at ${time}. They clocked on at <t:${clockInTime}:t> and were clocked in for \`${dutytime}\` minutes.`;
+			const uuid = uuidv4();
+			await dutyClockDB.addHistoricalRecord(uuid, hex, charName, jobRole, clockInTime, now);
 		}
 		else {
 			const clockInTime = 'unknown';
 			const dutytime = 'unknown';
 			text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
 			text2 = `:red_circle: \`${charName}\` clocked off at ${time}. They clocked on at \`${clockInTime}\` and were clocked in for \`${dutytime}\` minutes.`;
+			const uuid = uuidv4();
+			await dutyClockDB.addHistoricalRecord(uuid, hex, charName, jobRole, now, now);
 		}
 		await dutyClockDB.clockOutUpdate(hex, charName, jobRole, now);
 		if (jobRole === 'POLICE') {
@@ -68,7 +73,7 @@ async function dutyClock(discordmessage, client) {
 			await client.channels.cache.get('923065033053855744').send(':bangbang: Help I\'ve fallen and can\'t get up. :(');
 		}
 		await client.channels.cache.get('923065033053855744').send(text); // Sends message to all logs channel
-		const clockList = await dutyClockDB.clockOut(hex);
+		const clockList = await dutyClockDB.clockOut(charName);
 		await messageHandle.clockMessage(client, clockList);
 	}
 	else {

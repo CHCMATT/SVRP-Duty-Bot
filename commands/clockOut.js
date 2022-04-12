@@ -1,7 +1,6 @@
 const dutyClockDB = require('../dutyClockDB');
 const messageHandle = require('../messageHandler');
 
-
 module.exports = {
 	name: 'clockout',
 	description: 'Force removes a user from the Duty Clock database.',
@@ -17,29 +16,30 @@ module.exports = {
 			permission: true,
 		},
 		{
-			id: '749280136590786561', // @everyone in Law Discord
+			id: '888571619734339594', // @everyone in Law Discord
 			type: 'ROLE',
 			permission: false,
 		},
 	],
 	options: [
 		{
-			name: 'hex',
-			description: 'Steam Hex ID',
+			name: 'officername',
+			description: 'Officer Name',
 			type: 'STRING',
 			required: true,
 		},
 	],
 	async execute(interaction) {
-		const hex = interaction.options.getString('hex');
+		const charnamestr = interaction.options.getString('officername');
 		const user = interaction.member.user.username;
 		const now = Math.floor(new Date().getTime() / 1000.0);
 		const time = `<t:${now}:t>`;
-		const hexInfoOjb = await dutyClockDB.getInfoFromHex(hex);
-		if (hexInfoOjb !== null) {
-			const clockInTime = await hexInfoOjb.clockInTime;
-			const charName = await hexInfoOjb.charName;
-			const jobRole = await hexInfoOjb.jobRole;
+		const charInfoOjb = await dutyClockDB.getInfoFromName(charnamestr);
+		if (charInfoOjb !== null) {
+			const clockInTime = await charInfoOjb.clockInTime;
+			const charName = await charInfoOjb.charName;
+			const jobRole = await charInfoOjb.jobRole;
+			const hex = await charInfoOjb.hexID;
 			const clockAction = 'off';
 			const dutytime = (Math.round((now - clockInTime) / 60));
 			text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
@@ -58,13 +58,13 @@ module.exports = {
 				await interaction.client.channels.cache.get('923065033053855744').send(':bangbang: Help I\'ve fallen and can\'t get up. :(');
 			}
 			await interaction.client.channels.cache.get('923065033053855744').send(text); // Sends message to all logs channel
-			const clockList = await dutyClockDB.clockOut(hex);
+			const clockList = await dutyClockDB.clockOut(charName);
 			await messageHandle.clockMessage(interaction.client, clockList);
-			text3 = `\`${hex}\` was force clocked off by \`${user}\` at ${time}.`;
+			text3 = `\`${charName}\` was force clocked off by \`${user}\` at ${time}.`;
 			await interaction.reply(text3);
 		}
 		else {
-			interaction.reply(`Hex ID \`${hex}\` is not clocked in right now.`);
+			interaction.reply(`Officer \`${charnamestr}\` is not clocked in right now.`);
 		}
 	},
 };

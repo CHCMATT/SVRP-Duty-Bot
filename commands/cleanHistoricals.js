@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
 
 module.exports = {
-	name: 'clockoutall',
-	description: 'Forces all users to clock out from the Duty Clock database.',
+	name: 'cleanhistoricals',
+	description: 'Cleans all old duty log information from the Duty Clock Historical database.',
 	permission: [
 		{
 			id: '749280137173925911', // Server Staff
@@ -15,7 +15,7 @@ module.exports = {
 			permission: true,
 		},
 		{
-			id: '888571619734339594', // @everyone in Law Discord
+			id: '749280136590786561', // @everyone in Law Discord
 			type: 'ROLE',
 			permission: false,
 		},
@@ -23,7 +23,7 @@ module.exports = {
 	async execute(interaction) {
 		const btns = confirmDenyBtns();
 		await interaction.reply({
-			content: 'Are you sure you want to reset the Duty Clock database?',
+			content: 'Are you sure you want to clean the Duty Clock Historical database?',
 			components: [btns],
 		});
 	},
@@ -32,11 +32,11 @@ module.exports = {
 function confirmDenyBtns() {
 	const row = new Discord.MessageActionRow().addComponents(
 		new Discord.MessageButton()
-			.setCustomId('confirmCOA')
+			.setCustomId('confirmCH')
 			.setLabel('Confirm')
 			.setStyle('SUCCESS'),
 		new Discord.MessageButton()
-			.setCustomId('cancelCOA')
+			.setCustomId('cancelCH')
 			.setLabel('Cancel')
 			.setStyle('DANGER'),
 	);

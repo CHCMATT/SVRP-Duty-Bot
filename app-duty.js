@@ -29,13 +29,13 @@ client.once('ready', async () => {
 	});
 
 	async function amResetJob() {
-		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock database has been successfully reset by `Scheduled Job (5am EST)`.');
 		COA.clockOutAll(client);
+		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock database has been reset by `Scheduled Job (5am EST)`.');
 	}
 
 	async function pmResetJob() {
-		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock database has been successfully reset by `Scheduled Job (5pm EST)`.');
 		COA.clockOutAll(client);
+		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock database has been reset by `Scheduled Job (5pm EST)`.');
 	}
 
 	cron.schedule('0 1 5 * * *', function() { amResetJob(); });
