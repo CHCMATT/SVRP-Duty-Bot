@@ -42,14 +42,14 @@ async function dutyClock(discordmessage, client) {
 	else if (clockAction === 'off') {
 		const now = Math.floor(new Date().getTime() / 1000.0);
 		const time = `<t:${now}:t>`;
-		const clockInTimeObj = await dutyClockDB.getLatestClockIn(hex);
+		const clockInTimeObj = await dutyClockDB.getLatestClockIn(charName);
 		if (clockInTimeObj !== null) {
 			const clockInTime = await clockInTimeObj.clockInTime;
 			const dutytime = (Math.round((now - clockInTime) / 60));
 			text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
 			text2 = `:red_circle: \`${charName}\` clocked off at ${time}. They clocked on at <t:${clockInTime}:t> and were clocked in for \`${dutytime}\` minutes.`;
 			const uuid = uuidv4();
-			await dutyClockDB.addHistoricalRecord(uuid, hex, charName, jobRole, clockInTime, now);
+			await dutyClockDB.addHistoricalRecord(uuid, hex, charName, jobRole, clockInTime, now, dutytime);
 		}
 		else {
 			const clockInTime = 'unknown';
@@ -57,7 +57,7 @@ async function dutyClock(discordmessage, client) {
 			text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
 			text2 = `:red_circle: \`${charName}\` clocked off at ${time}. They clocked on at \`${clockInTime}\` and were clocked in for \`${dutytime}\` minutes.`;
 			const uuid = uuidv4();
-			await dutyClockDB.addHistoricalRecord(uuid, hex, charName, jobRole, now, now);
+			await dutyClockDB.addHistoricalRecord(uuid, hex, charName, jobRole, now, now, "0");
 		}
 		await dutyClockDB.clockOutUpdate(hex, charName, jobRole, now);
 		if (jobRole === 'POLICE') {

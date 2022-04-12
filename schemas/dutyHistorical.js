@@ -12,6 +12,7 @@ const dutyHistoricalSchema = mongoose.Schema({
 	jobRole: reqString,
 	clockIn: reqString,
 	clockOut: reqString,
+	minsWorked: reqString,
 });
 
 module.exports = mongoose.model('dutyHistorical', dutyHistoricalSchema);

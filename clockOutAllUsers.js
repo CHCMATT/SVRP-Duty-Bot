@@ -1,5 +1,6 @@
 const dutyClockDB = require('./dutyClockDB');
 const messageHandle = require('./messageHandler');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports.clockOutAll = async (client) => {
 	const now = Math.floor(new Date().getTime() / 1000.0);
@@ -10,18 +11,22 @@ module.exports.clockOutAll = async (client) => {
 		const hex = dutyArray[x].hexID;
 		const charName = dutyArray[x].charName;
 		const jobRole = dutyArray[x].jobRole;
-		const clockInTimeObj = await dutyClockDB.getLatestClockIn(hex);
+		const clockInTimeObj = await dutyClockDB.getLatestClockIn(charName);
 		if (clockInTimeObj !== null) {
 			const clockInTime = await clockInTimeObj.clockInTime;
 			const dutytime = (Math.round((now - clockInTime) / 60));
 			text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
 			text2 = `:red_circle: \`${charName}\` clocked off at ${time}. They clocked on at <t:${clockInTime}:t> and were clocked in for \`${dutytime}\` minutes.`;
+			const uuid = uuidv4();
+			await dutyClockDB.addHistoricalRecord(uuid, hex, charName, jobRole, clockInTime, now, dutytime);
 		}
 		else {
 			const clockInTime = 'unknown';
 			const dutytime = 'unknown';
 			text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
 			text2 = `:red_circle: \`${charName}\` clocked off at ${time}. They clocked on at \`${clockInTime}\` and were clocked in for \`${dutytime}\` minutes.`;
+			const uuid = uuidv4();
+			await dutyClockDB.addHistoricalRecord(uuid, hex, charName, jobRole, clockInTime, now, "0");
 		}
 		await dutyClockDB.clockOutUpdate(hex, charName, jobRole, now);
 		if (jobRole === 'POLICE') {
@@ -37,7 +42,7 @@ module.exports.clockOutAll = async (client) => {
 			await client.channels.cache.get('923065033053855744').send(':bangbang: Help I\'ve fallen and can\'t get up. :(');
 		}
 		await client.channels.cache.get('923065033053855744').send(text); // Sends message to all logs channel
-		const clockList = await dutyClockDB.clockOut(hex);
+		const clockList = await dutyClockDB.clockOut(charName);
 		await messageHandle.clockMessage(client, clockList);
 	}
 };

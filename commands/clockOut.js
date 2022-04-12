@@ -1,5 +1,6 @@
 const dutyClockDB = require('../dutyClockDB');
 const messageHandle = require('../messageHandler');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
 	name: 'clockout',
@@ -44,6 +45,8 @@ module.exports = {
 			const dutytime = (Math.round((now - clockInTime) / 60));
 			text = `:red_circle: \`${charName}\` clocked \`${clockAction}\` from \`${jobRole}\` at ${time} with Hex ID \`${hex}\`.`;
 			text2 = `:red_circle: \`${charName}\` clocked off at ${time}. They clocked on at <t:${clockInTime}:t> and were clocked in for \`${dutytime}\` minutes.`;
+			const uuid = uuidv4();
+			await dutyClockDB.addHistoricalRecord(uuid, hex, charName, jobRole, clockInTime, now, dutytime);
 			await dutyClockDB.clockOutUpdate(hex, charName, jobRole, now);
 			if (jobRole === 'POLICE') {
 				await interaction.client.channels.cache.get('925843917558124644').send(text2); // Sends message to PD log channel for HR

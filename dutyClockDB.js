@@ -94,10 +94,10 @@ module.exports.resetClock = async () => {
 	});
 };
 
-module.exports.getLatestClockIn = async (lastCharName) => {
+module.exports.getLatestClockIn = async (charName) => {
 	return await mongo().then(async () => {
 		try {
-			const LCI = await clockedIn.findOne({ lastCharName }, { clockInTime: 1, _id: 0 });
+			var LCI = await clockedIn.findOne({ charName }, { clockInTime: 1, charName: 1, _id: 0 });
 			return LCI;
 		}
 		finally {
@@ -202,12 +202,12 @@ module.exports.getUserInfoByName = async (lastCharName) => {
 	});
 };
 
-module.exports.addHistoricalRecord = async (uuid, hexID, charName, jobRole, clockIn, clockOut) => {
+module.exports.addHistoricalRecord = async (uuid, hexID, charName, jobRole, clockIn, clockOut, minsWorked) => {
 	return await mongo().then(async () => {
 		try {
 			await dutyHistorical.findOneAndUpdate(
 				{ uuid },
-				{ uuid, hexID, charName, jobRole, clockIn, clockOut },
+				{ uuid, hexID, charName, jobRole, clockIn, clockOut, minsWorked },
 				{ upsert: true,
 					new: true },
 			);
