@@ -7,6 +7,7 @@ const messageLog = require('./watchDog');
 const interact = require('./interactions');
 const messageHandle = require('./messageHandler');
 const COA = require('./clockOutAllUsers');
+const CH = require('./cleanHistoricals');
 const dutyClockDB = require('./dutyClockDB');
 
 const myIntents = new Intents();
@@ -38,8 +39,14 @@ client.once('ready', async () => {
 		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock database has been reset by `Scheduled Job (5pm EST)`.');
 	}
 
+	async function cleanHistoricals() {
+		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock Historical database has been cleaned by `Scheduled Job (12am EST)`.');
+		CH.cleanHistoricals(client);
+	}
+
 	cron.schedule('0 1 5 * * *', function() { amResetJob(); });
 	cron.schedule('0 1 17 * * *', function() { pmResetJob(); });
+	cron.schedule('0 1 0 * * *', function() { cleanHistoricals(); });
 
 	const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js')); // Find all the files in the command folder that end with .js
 	const cmdList = []; // Create an empty array for pushing each command file to
