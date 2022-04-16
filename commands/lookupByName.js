@@ -63,7 +63,7 @@ module.exports = {
 			await interaction.reply({ embeds: [userInfoEmbed] });
 		}
 		else {
-			await interaction.reply(`Officer \`${name}\` was not found in the Duty Clock database.`);
+			await interaction.reply(`Employee \`${name}\` was not found in the Duty Clock database.`);
 		}
 	},
 };

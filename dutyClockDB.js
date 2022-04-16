@@ -221,10 +221,11 @@ module.exports.addHistoricalRecord = async (uuid, hexID, charName, jobRole, cloc
 module.exports.cleanHistoricals = async (now) => {
 	return await mongo().then(async () => {
 		try {
-			thirtyDaysAgo = now - (86400 * 30);
+			datetime = now - (86400 * 30);
 			await dutyHistorical.deleteMany(
-				{ clockOut: { $lt: thirtyDaysAgo } },
+				{ clockOut: { $lt: datetime } },
 			);
+			return datetime;
 		}
 		finally {
 			// mongoose.connection.close();
@@ -248,7 +249,7 @@ module.exports.lookupHistoricals = async (charName, timeframe) => {
 	return await mongo().then(async () => {
 		try {
 			const found = await dutyHistorical.find(
-				{ charName, clockOut: { $gt: timeframe } },
+				{ charName, clockOut: { $gt: timeframe }}, { minsWorked: 1, _id: 0 }
 			);
 			return found;
 		}

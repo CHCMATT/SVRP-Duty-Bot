@@ -24,14 +24,14 @@ module.exports = {
 	],
 	options: [
 		{
-			name: 'officername',
-			description: 'Officer Name',
+			name: 'employeename',
+			description: 'Employee Name',
 			type: 'STRING',
 			required: true,
 		},
 	],
 	async execute(interaction) {
-		const charnamestr = interaction.options.getString('officername');
+		const charnamestr = interaction.options.getString('employeename');
 		const user = interaction.member.user.username;
 		const now = Math.floor(new Date().getTime() / 1000.0);
 		const time = `<t:${now}:t>`;
@@ -67,7 +67,7 @@ module.exports = {
 			await interaction.reply(text3);
 		}
 		else {
-			interaction.reply(`Officer \`${charnamestr}\` is not clocked in right now.`);
+			interaction.reply(`Employee \`${charnamestr}\` is not clocked in right now.`);
 		}
 	},
 };

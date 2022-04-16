@@ -40,8 +40,8 @@ client.once('ready', async () => {
 	}
 
 	async function cleanHistoricals() {
-		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock Historical database has been cleaned by `Scheduled Job (12am EST)`.');
-		CH.cleanHistoricals(client);
+		const datetime = await CH.cleanHistoricals(client);
+		await client.channels.cache.get('923065033053855744').send(`:bangbang: The Duty Clock Historical database has cleaned up any records older than <t:${datetime}:f>. Job initiated by \`Scheduled Job (12am EST)\`.`);
 	}
 
 	cron.schedule('0 1 5 * * *', function() { amResetJob(); });
