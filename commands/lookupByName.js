@@ -6,17 +6,32 @@ module.exports = {
 	description: 'Allows HR to check a users information from the database.',
 	permission: [
 		{
-			id: '749280137173925911', // Server Staff
+			id: '749280137173925911', // Law Server Staff
 			type: 'ROLE',
 			permission: true,
 		},
 		{
-			id: '826538019712532490', // IT
+			id: '666368348019359765', // Business Server Staff
 			type: 'ROLE',
 			permission: true,
 		},
 		{
-			id: '749280137157148677', // LSPD HR
+			id: '826538019712532490', // Law IT
+			type: 'ROLE',
+			permission: true,
+		},
+		{
+			id: '931484440524382210', // Business IT
+			type: 'ROLE',
+			permission: true,
+		},
+		{
+			id: '749294375900545064', // SALE High Command
+			type: 'ROLE',
+			permission: true,
+		},
+		{
+			id: '961801396297031721', // LSPD HR
 			type: 'ROLE',
 			permission: true,
 		},
@@ -31,7 +46,27 @@ module.exports = {
 			permission: true,
 		},
 		{
+			id: '651219515316633610', // PB HC
+			type: 'ROLE',
+			permission: true,
+		},
+		{
+			id: '842400298622648320', // PB HR
+			type: 'ROLE',
+			permission: true,
+		},
+		{
+			id: '926596785277894717', // PB Command
+			type: 'ROLE',
+			permission: true,
+		},
+		{
 			id: '888571619734339594', // @everyone in Law Discord
+			type: 'ROLE',
+			permission: false,
+		},
+		{
+			id: '650238228309213207', // @everyone in Business Discord
 			type: 'ROLE',
 			permission: false,
 		},

@@ -15,21 +15,6 @@ module.exports = {
 			permission: true,
 		},
 		{
-			id: '749280137157148677', // LSPD HR
-			type: 'ROLE',
-			permission: true,
-		},
-		{
-			id: '749280137157148676', // BCSO HR
-			type: 'ROLE',
-			permission: true,
-		},
-		{
-			id: '785546331497824307', // SADOC HR
-			type: 'ROLE',
-			permission: true,
-		},
-		{
 			id: '888571619734339594', // @everyone in Law Discord
 			type: 'ROLE',
 			permission: false,

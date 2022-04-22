@@ -97,7 +97,7 @@ module.exports.resetClock = async () => {
 module.exports.getLatestClockIn = async (charName) => {
 	return await mongo().then(async () => {
 		try {
-			var LCI = await clockedIn.findOne({ charName }, { clockInTime: 1, charName: 1, _id: 0 });
+			const LCI = await clockedIn.findOne({ charName }, { clockInTime: 1, charName: 1, _id: 0 });
 			return LCI;
 		}
 		finally {
@@ -221,7 +221,7 @@ module.exports.addHistoricalRecord = async (uuid, hexID, charName, jobRole, cloc
 module.exports.cleanHistoricals = async (now) => {
 	return await mongo().then(async () => {
 		try {
-			datetime = now - (86400 * 30);
+			datetime = now - (86400 * 40);
 			await dutyHistorical.deleteMany(
 				{ clockOut: { $lt: datetime } },
 			);
@@ -249,9 +249,48 @@ module.exports.lookupHistoricals = async (charName, timeframe) => {
 	return await mongo().then(async () => {
 		try {
 			const found = await dutyHistorical.find(
-				{ charName, clockOut: { $gt: timeframe }}, { minsWorked: 1, _id: 0 }
+				{ charName, clockOut: { $gt: timeframe } }, { minsWorked: 1, _id: 0 },
 			);
 			return found;
+		}
+		finally {
+			// mongoose.connection.close();
+		}
+	});
+};
+
+//
+// DATABASE STATS MODULES
+//
+module.exports.clockedInStats = async () => {
+	return await mongo().then(async () => {
+		try {
+			const stats = await clockedIn.stats();
+			return stats;
+		}
+		finally {
+			// mongoose.connection.close();
+		}
+	});
+};
+
+module.exports.dutyHistoricalStats = async () => {
+	return await mongo().then(async () => {
+		try {
+			const stats = await dutyHistorical.stats();
+			return stats;
+		}
+		finally {
+			// mongoose.connection.close();
+		}
+	});
+};
+
+module.exports.dutyUsersStats = async () => {
+	return await mongo().then(async () => {
+		try {
+			const stats = await dutyUsers.stats();
+			return stats;
 		}
 		finally {
 			// mongoose.connection.close();

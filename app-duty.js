@@ -71,6 +71,21 @@ client.once('ready', async () => {
 				.catch(console.error);
 		}
 	}
+	const allCommands2 = await client.guilds.cache.get('650238228309213207').commands.set(cmdList) // Sets all the commands
+		.catch(console.error);
+	const cmdIDs2 = allCommands2.keys();
+	for (let i = 0; i < allCommands2.size; i++) {
+		const cmdID = cmdIDs2.next().value;
+		const cmdName = await allCommands2.get(cmdID).name;
+		let permission = client.commands[cmdName].permission;
+		if(permission != undefined) { // If no permissions are given, don't update any permissions
+			if(permission.length == undefined) { // If the permission isn't already an array (more than 1 permission), turn it into an array as that is what the function requires
+				permission = [permission];
+			}
+			client.guilds.cache.get('650238228309213207').commands.permissions.set({ command: cmdID, permissions: permission })
+				.catch(console.error);
+		}
+	}
 
 	interact(client); // Fire whenever an interaction is created
 	messageLog(client);
