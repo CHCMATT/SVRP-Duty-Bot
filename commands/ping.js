@@ -7,6 +7,11 @@ module.exports = {
 			type: 'ROLE',
 			permission: true,
 		},
+		{
+			id: '650238228309213207', // @everyone in Business Discord
+			type: 'ROLE',
+			permission: true,
+		},
 	],
 	async execute(interaction) {
 		await interaction.reply('Pong!');

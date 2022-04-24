@@ -2,15 +2,25 @@ const dutyClockDB = require('../dutyClockDB');
 
 module.exports = {
 	name: 'checkduty',
-	description: 'Checks a hex to see if it is located in the Duty Clock database.',
+	description: 'Checks if an employee is located in the Duty Clock database.',
 	permission: [
 		{
-			id: '749280137173925911', // Server Staff
+			id: '749280137173925911', // Law Server Staff
 			type: 'ROLE',
 			permission: true,
 		},
 		{
-			id: '826538019712532490', // IT
+			id: '666368348019359765', // Business Server Staff
+			type: 'ROLE',
+			permission: true,
+		},
+		{
+			id: '826538019712532490', // Law IT
+			type: 'ROLE',
+			permission: true,
+		},
+		{
+			id: '931484440524382210', // Business IT
 			type: 'ROLE',
 			permission: true,
 		},
@@ -19,23 +29,28 @@ module.exports = {
 			type: 'ROLE',
 			permission: false,
 		},
+		{
+			id: '650238228309213207', // @everyone in Business Discord
+			type: 'ROLE',
+			permission: false,
+		},
 	],
 	options: [
 		{
-			name: 'hex',
-			description: 'Steam Hex ID',
+			name: 'employeename',
+			description: 'Employee Name',
 			type: 'STRING',
 			required: true,
 		},
 	],
 	async execute(interaction) {
-		const hex = interaction.options.getString('hex');
-		const checkForHex = await dutyClockDB.checkDuty(hex);
-		if (checkForHex) {
-			interaction.reply(`Steam Hex \`${hex}\` is **clocked on** duty.`);
+		const empname = interaction.options.getString('employeename');
+		const checkDuty = await dutyClockDB.checkDuty(empname);
+		if (checkDuty) {
+			interaction.reply(`Employee \`${empname}\` is **clocked on** duty.`);
 		}
 		else {
-			interaction.reply(`Steam Hex \`${hex}\` is **not clocked on** duty.`);
+			interaction.reply(`Employee\`${empname}\` is **not clocked on** duty.`);
 		}
 	},
 };

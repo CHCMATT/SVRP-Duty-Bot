@@ -5,17 +5,32 @@ module.exports = {
 	description: 'Cleans all old duty log information from the Duty Clock Historical database.',
 	permission: [
 		{
-			id: '749280137173925911', // Server Staff
+			id: '749280137173925911', // Law Server Staff
 			type: 'ROLE',
 			permission: true,
 		},
 		{
-			id: '826538019712532490', // IT
+			id: '666368348019359765', // Business Server Staff
 			type: 'ROLE',
 			permission: true,
 		},
 		{
-			id: '749280136590786561', // @everyone in Law Discord
+			id: '826538019712532490', // Law IT
+			type: 'ROLE',
+			permission: true,
+		},
+		{
+			id: '931484440524382210', // Business IT
+			type: 'ROLE',
+			permission: true,
+		},
+		{
+			id: '888571619734339594', // @everyone in Law Discord
+			type: 'ROLE',
+			permission: false,
+		},
+		{
+			id: '650238228309213207', // @everyone in Business Discord
 			type: 'ROLE',
 			permission: false,
 		},
