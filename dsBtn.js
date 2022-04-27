@@ -1,5 +1,4 @@
-const COA = require('./clockOutAllUsers');
-const CH = require('./cleanHistoricals');
+const functions = require('./functions');
 
 module.exports.pressed = async (interaction, client) => {
 	try {
@@ -7,16 +6,16 @@ module.exports.pressed = async (interaction, client) => {
 		switch (buttonID) {
 		case 'confirmCOA':
 			await client.channels.cache.get('923065033053855744').send(`:bangbang: The Duty Clock database has been reset by \`${interaction.member.user.username}\`.`);
-			COA.clockOutAll(client);
+			functions.clockOutAll(client);
 			interaction.update({ content: 'The Duty Clock was successfully reset!', components:[] });
 		break;
 		case 'cancelCOA':
 			interaction.update({ content: 'Interaction cancelled - the Duty Clock was not reset.', components:[] });
 			break;
 			case 'confirmCH':
-				const datetime = await CH.cleanHistoricals(client);
+				const datetime = await functions.cleanHistoricals(client);
 				await client.channels.cache.get('923065033053855744').send(`:bangbang: The Duty Clock Historical database has cleaned up any records older than <t:${datetime}:f>. Job initiated by \`${interaction.member.user.username}\`.`);
-				interaction.update({ content: 'The Duty Clock historical databsse was successfully cleaned of old records!', components:[] });
+				interaction.update({ content: `The Duty Clock historical database was successfully cleaned of any records older than <t:${datetime}:f>.`, components:[] });
 			break;
 			case 'cancelCH':
 				interaction.update({ content: 'Interaction cancelled - the Duty Clock was not cleaned of any historical records.', components:[] });

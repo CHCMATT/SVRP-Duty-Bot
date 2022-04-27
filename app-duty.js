@@ -6,8 +6,7 @@ const config = require('./config.json');
 const messageLog = require('./watchDog');
 const interact = require('./interactions');
 const messageHandle = require('./messageHandler');
-const COA = require('./clockOutAllUsers');
-const CH = require('./cleanHistoricals');
+const functions = require('./functions');
 const dutyClockDB = require('./dutyClockDB');
 
 const myIntents = new Intents();
@@ -30,17 +29,17 @@ client.once('ready', async () => {
 	});
 
 	async function amResetJob() {
-		COA.clockOutAll(client);
+		functions.clockOutAll(client);
 		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock database has been reset by `Scheduled Job (5am EST)`.');
 	}
 
 	async function pmResetJob() {
-		COA.clockOutAll(client);
+		functions.clockOutAll(client);
 		await client.channels.cache.get('923065033053855744').send(':bangbang: The Duty Clock database has been reset by `Scheduled Job (5pm EST)`.');
 	}
 
 	async function cleanHistoricals() {
-		const datetime = await CH.cleanHistoricals(client);
+		const datetime = await functions.cleanHistoricals(client);
 		await client.channels.cache.get('923065033053855744').send(`:bangbang: The Duty Clock Historical database has cleaned up any records older than <t:${datetime}:f>. Job initiated by \`Scheduled Job (12am EST)\`.`);
 	}
 

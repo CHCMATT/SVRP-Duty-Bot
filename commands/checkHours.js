@@ -1,5 +1,6 @@
 const dutyClockDB = require('../dutyClockDB');
 const { MessageEmbed } = require('discord.js');
+const functions = require('../functions');
 
 module.exports = {
 	name: 'checkhours',
@@ -61,7 +62,7 @@ module.exports = {
 			permission: true,
 		},
 		{
-			id: '888571619734339594', // @everyone in Law Discord
+			id: '749280136590786561', // @everyone in Law Discord
 			type: 'ROLE',
 			permission: false,
 		},
@@ -86,7 +87,8 @@ module.exports = {
 		},
 	],
 	async execute(interaction) {
-		const charname = interaction.options.getString('employeename');
+		let charname = interaction.options.getString('employeename');
+		charname = await functions.toTitleCase(charname);
 		if (interaction.options.getString('numdays') !== null) {
 			global.numdays = interaction.options.getString('numdays');
 		}
